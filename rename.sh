@@ -58,4 +58,4 @@ done
 echo "Renamed to ${NAME} (${APP_ID}). Then run:"
 echo "  ./gradlew :app:dependencies --write-locks   # app/gradle.lockfile has no project-specific entries, but regenerate after any dependency change"
 echo "  ./gradlew ktlintCheck testDebugUnitTest assembleDebug"
-echo "Fill in LICENSE ([YEAR] [COPYRIGHT HOLDER]) and delete this script when done."
+echo "Update the copyright line in LICENSE for your project and delete this script when done."
