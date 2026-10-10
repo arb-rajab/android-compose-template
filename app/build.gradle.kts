@@ -133,3 +133,24 @@ ktlint {
 dependencyLocking {
     lockAllConfigurations()
 }
+
+// Build-tool classpaths (ktlint, Android lint) pin older transitive libraries that osv-scanner
+// flags (logback, commons-lang3, httpclient, BouncyCastle). They never ship in the APK, but the
+// fixed releases are drop-in, so force them rather than exempting the findings. Regenerate
+// app/gradle.lockfile after changing a version here. Drop a rule once the tool itself ships a
+// patched version.
+configurations.matching { it.name == "ktlint" || it.name == "androidLintTool" }.configureEach {
+    resolutionStrategy.eachDependency {
+        when {
+            requested.group == "ch.qos.logback" -> useVersion("1.5.34")
+            requested.group == "org.slf4j" && requested.name == "slf4j-api" -> useVersion("2.0.17")
+            requested.group == "org.apache.commons" && requested.name == "commons-lang3" ->
+                useVersion("3.18.0")
+            requested.group == "org.apache.httpcomponents" &&
+                (requested.name == "httpclient" || requested.name == "httpmime") ->
+                useVersion("4.5.14")
+            requested.group == "org.bouncycastle" && requested.name.endsWith("-jdk18on") ->
+                useVersion("1.85")
+        }
+    }
+}
