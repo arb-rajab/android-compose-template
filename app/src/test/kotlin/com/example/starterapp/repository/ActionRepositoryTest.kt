@@ -58,17 +58,16 @@ class ActionRepositoryTest {
     }
 
     @Test
-    fun `submit online falls back to queueing when the live call hits a network error`() =
-        runTest {
-            api.shouldFail = true
+    fun `submit online falls back to queueing when the live call hits a network error`() = runTest {
+        api.shouldFail = true
 
-            val outcome = repository.submit("a")
+        val outcome = repository.submit("a")
 
-            check(outcome is SubmitOutcome.Queued)
-            assertEquals(1, api.callCount)
-            assertEquals(1, dao.getAll().size)
-            assertTrue(queuedCallbackFired)
-        }
+        check(outcome is SubmitOutcome.Queued)
+        assertEquals(1, api.callCount)
+        assertEquals(1, dao.getAll().size)
+        assertTrue(queuedCallbackFired)
+    }
 
     @Test
     fun `replayPending success dequeues the entry`() = runTest {
