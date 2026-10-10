@@ -12,7 +12,4 @@ import kotlinx.serialization.Serializable
 data class ActionRequestDto(val payload: String)
 
 @Serializable
-data class ActionResponseDto(
-    val id: String,
-    @SerialName("created_at") val createdAt: String
-)
+data class ActionResponseDto(val id: String, @SerialName("created_at") val createdAt: String)
