@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # The Kotlin Gradle plugins (plugin.serialization, plugin.compose, ...)
+      # must stay on the same Kotlin version; bumping one alone breaks the build.
+      # kotlinx libraries and KSP are versioned separately, so they are not matched.
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin.*"
+          - "org.jetbrains.kotlin:*"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

@@ -1,0 +1,12 @@
+# osv-scanner policy. Keep this file empty of entries until a finding needs an exemption.
+#
+# Add an exemption only for a package that is confirmed to live in build/test tooling and
+# is absent from the shipped app, with an expiry so it must be re-justified:
+#
+# [[PackageOverrides]]
+# name = "group:artifact"
+# version = "1.2.3"
+# ecosystem = "Maven"
+# ignore = true
+# effectiveUntil = 2027-01-01T00:00:00Z
+# reason = "why this is not shipped and why there is no fix yet"

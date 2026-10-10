@@ -1,0 +1,56 @@
+package com.example.starterapp.di
+
+import com.example.starterapp.data.ServerConfig
+import com.example.starterapp.data.remote.StarterApi
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java.util.concurrent.TimeUnit
+import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+
+/** Attaches the user-configured static auth header, if any (see ServerConfigStore). */
+private class StaticHeaderInterceptor(private val configProvider: () -> ServerConfig) :
+    Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val config = configProvider()
+        val request = chain.request().newBuilder()
+        if (config.authHeaderName.isNotBlank()) {
+            request.header(config.authHeaderName, config.authHeaderValue)
+        }
+        return chain.proceed(request.build())
+    }
+}
+
+/**
+ * Builds a [StarterApi] for the given server config. Not a singleton: the base URL and auth
+ * header are user-configurable at runtime, so callers ask for a fresh client whenever the
+ * config might have changed.
+ */
+object ApiClientFactory {
+    private val json: Json = Json { ignoreUnknownKeys = true }
+
+    fun create(config: ServerConfig): StarterApi {
+        // BASIC logs method, URL and status only. Never raise this to HEADERS or BODY in a
+        // release build: it would log the auth header.
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+        val client =
+            OkHttpClient.Builder()
+                .addInterceptor(StaticHeaderInterceptor { config })
+                .addInterceptor(logging)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
+
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl(config.baseUrl)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+            .create(StarterApi::class.java)
+    }
+}

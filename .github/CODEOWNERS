@@ -1,0 +1,6 @@
+# Security-relevant CI configuration and the dependency-vuln suppression list
+# need a human in the loop before they change quietly. rename.sh replaces @OWNER
+# with the GitHub user or team you pass as its fourth argument.
+/.github/workflows/  @OWNER
+/osv-scanner.toml    @OWNER
+/app/gradle.lockfile @OWNER
