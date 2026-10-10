@@ -69,7 +69,7 @@ kotlin {
 val composeBomVersion = "2026.09.00"
 val roomVersion = "2.8.5"
 val retrofitVersion = "3.0.0"
-val workVersion = "2.9.1"
+val workVersion = "2.12.0"
 val coroutinesVersion = "1.11.0"
 val serializationVersion = "1.11.0"
 
@@ -119,7 +119,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 }
 
 ktlint {
